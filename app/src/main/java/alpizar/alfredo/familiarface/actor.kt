@@ -29,7 +29,9 @@ import java.io.StringReader
 
 class actor : AppCompatActivity() {
     private val someVariable= ArrayList<Pair<MutableList<String>, MutableList<Drawable>>>()
-
+    val names: MutableList<String> = mutableListOf<String>()
+    val drawables: MutableList<Drawable> = mutableListOf<Drawable>()
+    val adapter = CustomGrid(this@actor, names, drawables)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,7 @@ class actor : AppCompatActivity() {
         }
     }
 
-    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void,Pair<MutableList<String>, MutableList<Drawable>> , Pair<MutableList<String>, MutableList<Drawable>>>() {
+    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void,Pair<String, Drawable> , Pair<MutableList<String>, MutableList<Drawable>>>() {
 
         fun getHalves(arg: JsonArray): Pair<MutableList<JsonElement>, MutableList<JsonElement>> {
             val half1= mutableListOf<JsonElement>()
@@ -66,10 +68,14 @@ class actor : AppCompatActivity() {
 
             // AsyncTasks executed one one thread in Honeycomb+ unless executed in thread pool manually
 
+        override fun onPreExecute() {
 
+            grid.adapter = adapter
 
+        }
+
+        
         override fun doInBackground(vararg params: Void): Pair<MutableList<String>, MutableList<Drawable>> {
-            Log.wtf("start", "start1")
 
             val client = OkHttpClient()
             val urlM = HttpUrl.Builder()
@@ -93,16 +99,10 @@ class actor : AppCompatActivity() {
             val parser = JsonParser()
 
             val dataM = parser.parse(jsonM).asJsonObject
-
-
-            val names: MutableList<String> = mutableListOf<String>()
-            val drawables = mutableListOf<Drawable>()
-
-
             for (char in dataM.getAsJsonArray("cast")){
                 val charn=char["character"].asString
                 val titlem=char["title"].asString
-                names.add(charn+"\n$titlem")
+                //names.add(charn+"\n$titlem")
 
                 val client = OkHttpClient()
                 val url = HttpUrl.Builder()
@@ -127,19 +127,26 @@ class actor : AppCompatActivity() {
 
                 if (link !is JsonNull && link.asString != null) {
                     val io = URL(link.asString).getContent() as InputStream
-                    drawables.add(Drawable.createFromStream(io, "src name"))
-                } else drawables.add(getResources().getDrawable(R.drawable.notavailable, null))
+                    //drawables.add(Drawable.createFromStream(io, "src name"))
+                    publishProgress(Pair(charn+"\n$titlem", Drawable.createFromStream(io, "src name")))
+
+                } else publishProgress(Pair(charn+"\n$titlem", getResources().getDrawable(R.drawable.notavailable, null)))
+                //drawables.add(getResources().getDrawable(R.drawable.notavailable, null))
             }
-            publishProgress(Pair(names, drawables))
             return Pair(names, drawables)
         }
 
 
-        override fun onProgressUpdate(vararg values: Pair<MutableList<String>, MutableList<Drawable>>?) {
+        override fun onProgressUpdate(vararg values: Pair<String, Drawable>) {
+            Log.wtf("onProgressUpdate values", values.toList()[0].first)
+            //Log.wtf("onProgressUpdate values", values.frist.toString())
+            names.add(values.toList()[0].first)
+            drawables.add(values.toList()[0].second)
+            adapter.notifyDataSetChanged()
 
 
         }
-
+/*
         override fun onPostExecute(Data: Pair<MutableList<String>,MutableList<Drawable>>) {
 
             someVariable.add(Data)
@@ -147,7 +154,7 @@ class actor : AppCompatActivity() {
             //grid.setAdapter(adapter)
             Log.wtf("size",someVariable.size.toString())
             Log.wtf("end", "end1")
-            if(someVariable.size==2){
+            if(someVariable.size==2)wwwwAWSSSSSSSSSSS{
                 val namelist= mutableListOf<String>()
                 val drawablelist= mutableListOf<Drawable>()
                 namelist.addAll(someVariable[0].first)
@@ -156,11 +163,11 @@ class actor : AppCompatActivity() {
                 drawablelist.addAll(someVariable[1].second)
 
                 val adapter = CustomGrid(this@actor, namelist, drawablelist)
-                grid.setAdapter(adapter)
+                //grid.setAdapter(adapter)
             }
 
 
-        }
+        }*/
 
 
 
