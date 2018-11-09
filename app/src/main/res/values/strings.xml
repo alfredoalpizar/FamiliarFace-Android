@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Familiar Face</string>
+    <string name="air_release_year">Release Year (optional)...</string>
+    <string name="movie_name">Title...</string>
+    <string name="textview">TextView</string>
+    <string name="tv_show">TV Show</string>
+    <string name="movie">Movie</string>
+
+
+
+</resources>
