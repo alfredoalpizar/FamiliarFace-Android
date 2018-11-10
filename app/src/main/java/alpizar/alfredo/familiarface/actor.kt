@@ -173,7 +173,8 @@ class actor : AppCompatActivity() {
 
     }
 
-    inner class taskB(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void, Void, Pair<MutableList<String>, MutableList<Drawable>>>() {
+    inner class taskB(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void,Pair<String, Drawable> , Pair<MutableList<String>, MutableList<Drawable>>>() {
+
 
         fun getHalves(arg: JsonArray): Pair<MutableList<JsonElement>, MutableList<JsonElement>> {
             val half1= mutableListOf<JsonElement>()
@@ -241,7 +242,7 @@ class actor : AppCompatActivity() {
             for (char in dataM.getAsJsonArray("cast")){
                 val charn=char["character"].asString
                 val titlem=char["name"].asString
-                names.add(charn+"\n$titlem")
+                //names.add(charn+"\n$titlem")
 
                 val client = OkHttpClient()
                 val url = HttpUrl.Builder()
@@ -267,8 +268,8 @@ class actor : AppCompatActivity() {
 
                 if (link !is JsonNull && link.asString != null) {
                     val io = URL(link.asString).getContent() as InputStream
-                    drawables.add(Drawable.createFromStream(io, "src name"))
-                } else drawables.add(resources.getDrawable(R.drawable.notavailable, null))
+                    publishProgress(Pair(charn+"\n$titlem", Drawable.createFromStream(io, "src name")))
+                } else publishProgress(Pair(charn+"\n$titlem", getResources().getDrawable(R.drawable.notavailable, null)))
 
                 //val data = parser.parse(json).asJsonObject
 
@@ -277,7 +278,17 @@ class actor : AppCompatActivity() {
             return Pair(names, drawables)
         }
 
-        override fun onPostExecute(Data: Pair<MutableList<String>,MutableList<Drawable>>) {
+        override fun onProgressUpdate(vararg values: Pair<String, Drawable>) {
+            Log.wtf("onProgressUpdate values", values.toList()[0].first)
+            //Log.wtf("onProgressUpdate values", values.frist.toString())
+            names.add(values.toList()[0].first)
+            drawables.add(values.toList()[0].second)
+            adapter.notifyDataSetChanged()
+
+
+        }
+
+        /*override fun onPostExecute(Data: Pair<MutableList<String>,MutableList<Drawable>>) {
 
             //val adapter = CustomGrid(this@actor, Data.first, Data.second)
             //grid.setAdapter(adapter)
@@ -303,7 +314,7 @@ class actor : AppCompatActivity() {
 
 
 
-        }
+        }*/
     }
 }
 

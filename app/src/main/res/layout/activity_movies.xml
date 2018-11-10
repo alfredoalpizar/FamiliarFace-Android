@@ -10,13 +10,17 @@
         android:id="@+id/grid"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="false"
+        android:animationCache="false"
         android:columnWidth="160dp"
         android:gravity="center_horizontal"
         android:numColumns="2"
         android:stretchMode="columnWidth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
