@@ -2,6 +2,7 @@ package alpizar.alfredo.familiarface
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
@@ -18,13 +19,33 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
 import java.net.URL
+import android.graphics.Bitmap
+import android.os.Parcelable
+import android.transition.Fade
+import kotlinx.android.synthetic.main.grid_single.*
+
 
 class cast : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        with(window){
+            val fade = Fade()
+            fade.excludeTarget(android.R.id.statusBarBackground, true)
+            fade.excludeTarget(android.R.id.navigationBarBackground, true)
+            fade.excludeTarget(shared_image, true)
+            fade.excludeTarget(shared_title, true)
+            fade.excludeTarget(shared_char, true)
+
+
+            exitTransition = fade
+            enterTransition = fade
+        }
+        val bitmap = intent.getParcelableExtra<Parcelable>("sharedElemPIC") as Bitmap
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cast)
-        val intent = getIntent()
+        shared_image.setImageBitmap(bitmap)
+        shared_title.setText(intent.getStringExtra("sharedTitle"))
+
         UpdateInfoAsyncTask(intent.getStringExtra("id"), intent.getStringExtra("type")).execute()
     }
 

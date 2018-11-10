@@ -15,7 +15,8 @@
         android:layout_width="160dp"
         android:layout_height="230dp"
         android:layout_gravity="center"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:transitionName="image_transition"/>
 
     <TextView
         android:id="@+id/grid_text"
@@ -25,7 +26,9 @@
         android:gravity="center_horizontal"
         android:textSize="10sp"
         android:textStyle="bold"
-        tools:ignore="SmallSp" />
+        tools:ignore="SmallSp"
+        android:transitionName="title_transition"/>
+
 
     <TextView
         android:id="@+id/grid_char"
@@ -34,6 +37,7 @@
         android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:textSize="10sp"
-        tools:ignore="SmallSp" />
+        tools:ignore="SmallSp"
+        android:transitionName="char_transition"/>
 
 </LinearLayout>

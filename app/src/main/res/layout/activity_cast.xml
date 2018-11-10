@@ -6,17 +6,67 @@
     android:layout_height="match_parent"
     tools:context="alpizar.alfredo.familiarface.cast">
 
+    <ImageView
+        android:id="@+id/shared_image"
+        android:layout_width="80dp"
+        android:layout_height="115dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:adjustViewBounds="true"
+        android:transitionName="image_transition"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/shared_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:transitionName="title_transition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shared_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SmallSp" />
+
+
+    <TextView
+        android:id="@+id/shared_char"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        android:transitionName="char_transition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shared_image"
+        app:layout_constraintTop_toBottomOf="@+id/shared_title"
+        tools:ignore="SmallSp" />
+
     <GridView
         android:id="@+id/grid"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="377dp"
+        android:layout_marginTop="8dp"
         android:columnWidth="160dp"
         android:gravity="center_horizontal"
         android:numColumns="2"
         android:stretchMode="columnWidth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/shared_image"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
