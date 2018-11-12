@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/shared_image"
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="115dp"
         android:layout_gravity="center"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:transitionName="image_transition"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
     <GridView
         android:id="@+id/grid"
         android:layout_width="wrap_content"
-        android:layout_height="377dp"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:columnWidth="160dp"
         android:gravity="center_horizontal"

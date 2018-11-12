@@ -59,10 +59,10 @@ class movies : AppCompatActivity() {
 
     }
 
-    inner class UpdateInfoAsyncTask(internal var name: String, internal var year: String, internal var type: String) : AsyncTask<Void, Pair<Triple<String, Drawable,String>, String>, Pair<Triple<MutableList<String>, MutableList<Drawable>, MutableList<String>>, String>>() {
+    inner class UpdateInfoAsyncTask(internal var name: String, internal var year: String, internal var type: String) : AsyncTask<Void, Pair<Triple<String, Drawable,String>, String>,Void>() {
 
 
-        override fun doInBackground(vararg params: Void): Pair<Triple<MutableList<String>, MutableList<Drawable>, MutableList<String>>, String> {
+        override fun doInBackground(vararg params: Void): Void? {
             val q = if (type == "movie") "primary_release_year" else "first_air_date_year"
             val client = OkHttpClient()
             val url = HttpUrl.Builder()
@@ -103,7 +103,7 @@ class movies : AppCompatActivity() {
 
 
             }
-            return Pair(Triple(titles, drawables, ids), type)
+            return null
         }
 
         override fun onProgressUpdate(vararg values: Pair<Triple<String, Drawable, String>, String>) {

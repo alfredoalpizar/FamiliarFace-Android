@@ -49,7 +49,7 @@ class actor : AppCompatActivity() {
         }
     }
 
-    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void,Pair<String, Drawable> , Pair<MutableList<String>, MutableList<Drawable>>>() {
+    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String, internal var name:String) : AsyncTask<Void,Pair<String, Drawable> , Void>() {
 
         fun getHalves(arg: JsonArray): Pair<MutableList<JsonElement>, MutableList<JsonElement>> {
             val half1= mutableListOf<JsonElement>()
@@ -75,7 +75,7 @@ class actor : AppCompatActivity() {
         }
 
         
-        override fun doInBackground(vararg params: Void): Pair<MutableList<String>, MutableList<Drawable>> {
+        override fun doInBackground(vararg params: Void): Void? {
 
             val client = OkHttpClient()
             val urlM = HttpUrl.Builder()
@@ -133,7 +133,7 @@ class actor : AppCompatActivity() {
                 } else publishProgress(Pair(charn+"\n$titlem", getResources().getDrawable(R.drawable.notavailable, null)))
                 //drawables.add(getResources().getDrawable(R.drawable.notavailable, null))
             }
-            return Pair(names, drawables)
+            return null
         }
 
 

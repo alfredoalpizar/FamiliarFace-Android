@@ -27,6 +27,12 @@ import kotlinx.android.synthetic.main.grid_single.*
 
 class cast : AppCompatActivity() {
 
+
+
+    val names: MutableList<String> = mutableListOf<String>()
+    val ids = mutableListOf<String>()
+    val drawables = mutableListOf<Drawable>()
+    val adapter = CustomGrid(this@cast, names, drawables)
     override fun onCreate(savedInstanceState: Bundle?) {
         with(window){
             val fade = Fade()
@@ -43,16 +49,18 @@ class cast : AppCompatActivity() {
         val bitmap = intent.getParcelableExtra<Parcelable>("sharedElemPIC") as Bitmap
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cast)
+
         shared_image.setImageBitmap(bitmap)
         shared_title.setText(intent.getStringExtra("sharedTitle"))
+        grid.adapter = adapter
 
         UpdateInfoAsyncTask(intent.getStringExtra("id"), intent.getStringExtra("type")).execute()
     }
 
-    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String) : AsyncTask<Void, Void, Triple<MutableList<String>,MutableList<Drawable>, Pair<MutableList<String>,String>>>() {
+    inner class UpdateInfoAsyncTask(internal var id: String, internal var type:String) : AsyncTask<Void, Pair<Triple<String,Drawable,String>,String>, Void>() {
 
 
-        override fun doInBackground(vararg params: Void): Triple<MutableList<String>,MutableList<Drawable>, Pair<MutableList<String>,String>>? {
+        override fun doInBackground(vararg params: Void): Void? {
             val client = OkHttpClient()
             val url = HttpUrl.Builder()
                     .scheme("https")
@@ -70,32 +78,34 @@ class cast : AppCompatActivity() {
             val json = response.body()!!.string()
             val parser = JsonParser()
             val data = parser.parse(json).asJsonObject
-            val names: MutableList<String> = mutableListOf<String>()
-            val ids = mutableListOf<String>()
-            val drawables = mutableListOf<Drawable>()
+            //val names: MutableList<String> = mutableListOf<String>()
+            //val ids = mutableListOf<String>()
+            //val drawables = mutableListOf<Drawable>()
 
             for (element in data.getAsJsonArray("cast")) {
 
                 if (element["profile_path"] !is JsonNull) {
                     val io = URL("http://image.tmdb.org/t/p/w185" + element["profile_path"].asString).getContent() as InputStream
-                    drawables.add(Drawable.createFromStream(io, "src name"))
-                } else drawables.add(getResources().getDrawable(R.drawable.notavailable, null))
+                    publishProgress(Pair(Triple(element["name"].asString+"\n"+element["character"].asString, Drawable.createFromStream(io, "src name"),element["id"].asString), type))
+                } else publishProgress(Pair(Triple(element["name"].asString+"\n"+element["character"].asString, getResources().getDrawable(R.drawable.notavailable, null),element["id"].asString), type))
 
-                names.add(element["name"].asString+"\n"+element["character"].asString)
-                ids.add(element["id"].asString)
             }
-            return Triple(names, drawables, Pair(ids,type))
+            return null
         }
 
-        override fun onPostExecute(Data: Triple<MutableList<String>,MutableList<Drawable>, Pair<MutableList<String>,String>>) {
+        override fun onProgressUpdate(vararg values: Pair<Triple<String,Drawable,String>,String>) {
 
-            val adapter = CustomGrid(this@cast, Data.first, Data.second)
-            grid.adapter = adapter
+           // val adapter = CustomGrid(this@cast, Data.first, Data.second)
+           // grid.adapter = adapter
+            names.add(values.toList()[0].first.first)
+            drawables.add(values.toList()[0].first.second)
+            ids.add(values.toList()[0].first.third)
+            adapter.notifyDataSetChanged()
             grid.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                 val myIntent = Intent(view?.getContext(), actor::class.java)
-                myIntent.putExtra("id",Data.third.first[position])
-                myIntent.putExtra("type",Data.third.second)
-                myIntent.putExtra("name",Data.first[position].split("\n")[0])
+                myIntent.putExtra("id",ids[position])
+                myIntent.putExtra("type",type)
+                myIntent.putExtra("name",names[position].split("\n")[0])
                 startActivity(myIntent, ActivityOptions.makeSceneTransitionAnimation(this@cast).toBundle())
             }
 
